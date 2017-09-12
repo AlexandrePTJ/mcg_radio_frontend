@@ -2,17 +2,12 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='picnic.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>MCG Radio</title>
   </head>
   <body>
-    <div id="content">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <div id="footer">
-      {% block footer %}
-      {% endblock %}
-    </div>
+    <div id="content">{% block content %}{% endblock %}</div>
   </body>
 </html>
