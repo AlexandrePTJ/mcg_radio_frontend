@@ -1,7 +1,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1>Index</h1>
-  <p class="important">
-    Welcome To MCG Radio.
+  <div class="flex four">
+    <div class="off-fourth">
+        <img src="{{ url_for('static', filename='icons8-Settings-96.png') }}">
+        <a class="button stack" href="{{ url_for('settings') }}">Settings</a>
+    </div>
+    <div>
+        <img src="{{ url_for('static', filename='icons8-Tabletop Radio-96.png') }}">
+        <a class="button stack" href="{{ url_for('player') }}">Player</a>
+    </div>
+  </div>
 {% endblock %}

@@ -8,6 +8,14 @@
     <title>MCG Radio</title>
   </head>
   <body>
-    <div id="content">{% block content %}{% endblock %}</div>
+    <nav id="mcgmenu">
+        <a href="#" class="brand">
+            <img class="logo" src="{{ url_for('static', filename='logo.png') }}">
+            <span>MCG Radio</span>
+        </a>
+    </nav>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
   </body>
 </html>
