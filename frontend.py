@@ -23,5 +23,14 @@ def player():
     return render_template('player.html')
 
 
-if __name__ == '__main__':
-    app.run(port=5001)
+@app.route('/search/<name>')
+def search(name):
+    params = {
+        "render": "json",
+        "locale": "fr-FR",
+        "call": name,
+        "query": name,
+        "c": "stations"
+    }
+    r = requests.get("https://opml.radiotime.com/Search.ashx", params=params)
+    return r.text
