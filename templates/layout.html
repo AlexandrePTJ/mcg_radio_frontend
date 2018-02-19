@@ -9,10 +9,17 @@
   </head>
   <body>
     <nav id="mcgmenu">
+        <input id="bmenug" type="checkbox" class="show">
+        <label for="bmenug" class="burger pseudo button">&#8801;</label>
         <a href="#" class="brand">
             <img class="logo" src="{{ url_for('static', filename='logo.png') }}">
             <span>MCG Radio</span>
         </a>
+        <div class="menu">
+          <form action="{{ url_for('search') }}" method="post">
+            <input name="name" placeholder="Search radios" />
+          </form>
+        </div>
     </nav>
     <div id="content">
         {% block content %}{% endblock %}

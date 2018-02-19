@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>{{ name }}</h1>
+
+{% for r in sr %}
+<div>
+    <img src="{{ r['img'] }}" align="center">
+    <a href="#" class="button icon-puzzle">{{ r['text'] }}</a>
+</div>
+{% endfor %}
+
+
+{% endblock %}
