@@ -1,14 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div class="flex four">
-    <div class="off-fourth">
-        <img src="{{ url_for('static', filename='icons8-Settings-96.png') }}">
-        <a class="button stack" href="{{ url_for('settings') }}">Settings</a>
-    </div>
+
+<div class="flex four">
+    {% for station in stations %}
     <div>
-        <img src="{{ url_for('static', filename='icons8-Tabletop Radio-96.png') }}">
-        <a class="button stack" href="{{ url_for('player') }}">Player</a>
+        <article class="card">
+            <img src="{{ station.image_url }}">
+            <footer>
+                <h4>{{ station.position }} - {{ station.name }}</h4>
+            </footer>
+        </article>
     </div>
-  </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
