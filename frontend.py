@@ -26,6 +26,7 @@ def connect_db():
     rv.row_factory = sqlite3.Row
     return rv
 
+
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -34,16 +35,19 @@ def get_db():
         g.sqlite_db = connect_db()
     return g.sqlite_db
 
+
 def get_next_position(db):
     """ Find hole in positions """
     cur = db.execute("SELECT MAX(position) FROM stations ORDER BY position ASC")
     r = cur.fetchone()
     return 1 if r[0] == None else r[0] + 1
 
+
 def get_positions(db):
     """ Return current positions occupied """
     cur = db.execute("SELECT position FROM stations ORDER BY position ASC")
     return [r[0] for r in cur]
+
 
 def insert_station(db, name, position, stream_url, image_url):
     """ Create a new station entry """
@@ -53,10 +57,12 @@ def insert_station(db, name, position, stream_url, image_url):
     )
     db.commit()
 
+
 @app.teardown_appcontext
 def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
+
 
 def parse_search(data):
     """ parse search result from tunein """
@@ -81,6 +87,14 @@ def parse_search(data):
     return qr_name, search_result, search_error
 
 
+def extract_stream_url(ashx_url):
+    """ Extract real stream url from tunein stream url """
+    r = requests.get(ashx_url)
+    for l in r.text.splitlines():
+        if len(l) != 0:
+            return l
+
+
 #
 # Routes
 #
@@ -98,7 +112,7 @@ def add_station():
     insert_station(db,
         request.form['name'],
         get_next_position(db),
-        request.form['stream_url'],
+        extract_stream_url(request.form['stream_url']),
         request.form['image_url']
     )
     return redirect('/')
@@ -119,7 +133,6 @@ def new_station():
 
     positions = get_positions(db)
     return render_template('edit.html', station={}, positions=positions)
-
 
 
 @app.route('/edit/<station_id>', methods=['POST', 'GET'])
@@ -147,9 +160,12 @@ def edit_station(station_id):
     return render_template('edit.html', station=station, positions=positions)
 
 
-# @app.route('/play/<station_id>')
-# def play_station(station_id):
-#     pass
+@app.route('/remove/<station_id>')
+def remove_station(station_id):
+    db = get_db()
+    db.execute("DELETE FROM stations WHERE id=?", station_id)
+    db.commit()
+    return redirect('/')
 
 
 @app.route('/search', methods=['POST', 'GET'])
@@ -168,3 +184,9 @@ def search():
         qrn, sr, se = parse_search(json.loads(r.text))
 
     return render_template('search.html', sr=sr, se=se, name=qrn)
+
+
+# @app.route('/play/<station_id>')
+# def play_station(station_id):
+#     pass
+
