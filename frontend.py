@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'mcg_radio.db'),
+    DATABASE=os.path.join(app.root_path, '../mcg_radio.db'),
     BACKEND_URL="http://127.0.0.1:5000",
     TUNEIN_URL="https://opml.radiotime.com"
 ))
@@ -39,6 +39,19 @@ def get_next_position(db):
     cur = db.execute("SELECT MAX(position) FROM stations ORDER BY position ASC")
     r = cur.fetchone()
     return 1 if r[0] == None else r[0] + 1
+
+def get_positions(db):
+    """ Return current positions occupied """
+    cur = db.execute("SELECT position FROM stations ORDER BY position ASC")
+    return [r[0] for r in cur]
+
+def insert_station(db, name, position, stream_url, image_url):
+    """ Create a new station entry """
+    db.execute(
+        "INSERT INTO stations(name,position,stream_url,image_url) VALUES (?,?,?,?)",
+        (name, position, stream_url, image_url )
+    )
+    db.commit()
 
 @app.teardown_appcontext
 def close_db(error):
@@ -82,23 +95,57 @@ def index():
 @app.route('/add', methods=['POST'])
 def add_station():
     db = get_db()
-    db.execute(
-        "INSERT INTO stations(name,position,stream_url,image_url) VALUES (?,?,?,?)",
-        (
-            request.form['name'],
-            get_next_position(db),
-            request.form['stream_url'],
-            request.form['image_url']
-        )
+    insert_station(db,
+        request.form['name'],
+        get_next_position(db),
+        request.form['stream_url'],
+        request.form['image_url']
     )
-    db.commit()
     return redirect('/')
 
 
-# TODO:
-# @app.route('/edit/<station_id>')
-# def edit_station(station_id):
-#     pass
+@app.route('/new', methods=['POST', 'GET'])
+def new_station():
+    db = get_db()
+
+    if request.method == 'POST':
+        insert_station(db,
+            request.form['name'],
+            request.form['position'],
+            request.form['stream_url'],
+            request.form['image_url']
+        )
+        return redirect('/')
+
+    positions = get_positions(db)
+    return render_template('edit.html', station={}, positions=positions)
+
+
+
+@app.route('/edit/<station_id>', methods=['POST', 'GET'])
+def edit_station(station_id):
+    db = get_db()
+
+    if request.method == 'POST':
+        db.execute(
+            "UPDATE stations SET name=?,position=?,stream_url=?,image_url=? WHERE id=?",
+            (
+                request.form['name'],
+                request.form['position'],
+                request.form['stream_url'],
+                request.form['image_url'],
+                station_id
+            )
+        )
+        db.commit()
+        return redirect('/')
+
+    cur = db.execute("SELECT * FROM stations WHERE id=?", station_id)
+    station = cur.fetchone()
+    positions = get_positions(db)
+    positions.remove(station['position'])
+    return render_template('edit.html', station=station, positions=positions)
+
 
 # @app.route('/play/<station_id>')
 # def play_station(station_id):
