@@ -1,28 +1,29 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='picnic.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>MCG Radio</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="{{ url_for('static', filename='picnic.min.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      <title>MCG Radio</title>
   </head>
   <body>
-    <nav id="mcgmenu">
-        <input id="bmenug" type="checkbox" class="show">
-        <label for="bmenug" class="burger pseudo button">&#8801;</label>
-        <a href="{{ url_for('index') }}" class="brand">
-            <img class="logo" src="{{ url_for('static', filename='logo.png') }}">
-            <span>MCG Radio</span>
-        </a>
-        <div class="menu">
+  <nav id="mcgmenu">
+      <input id="bmenug" type="checkbox" class="show">
+      <label for="bmenug" class="burger pseudo button">&#8801;</label>
+      <a href="{{ url_for('index') }}" class="brand">
+          <img class="logo" src="{{ url_for('static', filename='logo.png') }}">
+          <span>MCG Radio</span>
+      </a>
+      <a href="{{ url_for('new_station') }}" class="button">Add</a>
+      <div class="menu">
           <form action="{{ url_for('search') }}" method="post">
-            <input name="name" placeholder="Search radios" />
+              <input name="name" placeholder="Search radios" />
           </form>
-        </div>
-    </nav>
-    <div id="content">
-        {% block content %}{% endblock %}
-    </div>
+      </div>
+  </nav>
+  <div id="content">
+      {% block content %}{% endblock %}
+  </div>
   </body>
 </html>

@@ -17,6 +17,7 @@ app.config.update(dict(
     TUNEIN_URL="https://opml.radiotime.com"
 ))
 
+
 #
 # Helpers
 #
@@ -49,11 +50,11 @@ def get_positions(db):
     return [r[0] for r in cur]
 
 
-def insert_station(db, name, position, stream_url, image_url):
+def insert_station(db, name, position, stream_url, image_url, volume=80):
     """ Create a new station entry """
     db.execute(
-        "INSERT INTO stations(name,position,stream_url,image_url) VALUES (?,?,?,?)",
-        (name, position, stream_url, image_url )
+        "INSERT INTO stations(name,position,stream_url,image_url,volume) VALUES (?,?,?,?,?)",
+        (name, position, stream_url, image_url, volume)
     )
     db.commit()
 
@@ -127,7 +128,8 @@ def new_station():
             request.form['name'],
             request.form['position'],
             request.form['stream_url'],
-            request.form['image_url']
+            request.form['image_url'],
+            request.form['volume']
         )
         return redirect('/')
 
@@ -141,12 +143,13 @@ def edit_station(station_id):
 
     if request.method == 'POST':
         db.execute(
-            "UPDATE stations SET name=?,position=?,stream_url=?,image_url=? WHERE id=?",
+            "UPDATE stations SET name=?,position=?,stream_url=?,image_url=?,volume=? WHERE id=?",
             (
                 request.form['name'],
                 request.form['position'],
                 request.form['stream_url'],
                 request.form['image_url'],
+                request.form['volume'],
                 station_id
             )
         )
