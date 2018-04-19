@@ -8,7 +8,7 @@
     <form action="{{ url_for('new_station') }}" method="post">
     {% endif %}
 
-        <input class="stack" type="text" placeholder="Name" name="name" value="{{ station.name|safe }}">
+        <input class="stack" type="text" placeholder="Nom" name="name" value="{{ station.name|safe }}">
         <input class="stack" type="text" placeholder="Stream URL" name="stream_url" value="{{ station.stream_url|safe }}">
         <input class="stack" type="text" placeholder="Image URL" name="image_url" value="{{ station.image_url|safe }}">
         <input class="stack" type="number" placeholder="Volume" name="volume" value="{{ station.volume|safe }}" min="0" max="100">

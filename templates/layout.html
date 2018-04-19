@@ -15,10 +15,10 @@
           <img class="logo" src="{{ url_for('static', filename='logo.png') }}">
           <span>MCG Radio</span>
       </a>
-      <a href="{{ url_for('new_station') }}" class="button">Add</a>
+      <a href="{{ url_for('new_station') }}" class="button">Ajouter</a>
       <div class="menu">
           <form action="{{ url_for('search') }}" method="post">
-              <input name="name" placeholder="Search radios" />
+              <input name="name" placeholder="Rechercher une radio" />
           </form>
       </div>
   </nav>
