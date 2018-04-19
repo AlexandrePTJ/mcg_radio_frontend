@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>{{ name }}</h1>
+    <div class="flex four">
+        {% for r in sr %}
+            <div>
+                <form action="{{ url_for('add_station') }}" method="post">
+                    <img src="{{ r['img'] }}" align="center">
+                    <input type="hidden" name="stream_url" value="{{ r['url'] }}">
+                    <input type="hidden" name="image_url" value="{{ r['img'] }}">
+                    <input type="text" name="name" value="{{ r['text'] }}">
+                    <input type="submit" value="Ajouter">
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

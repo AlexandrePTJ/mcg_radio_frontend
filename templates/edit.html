@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    {% if station %}
+    <form action="{{ url_for('edit_station', station_id=station.id) }}" method="post">
+    {% else %}
+    <form action="{{ url_for('new_station') }}" method="post">
+    {% endif %}
+
+        <input class="stack" type="text" placeholder="Nom" name="name" value="{{ station.name|safe }}">
+        <input class="stack" type="text" placeholder="Stream URL" name="stream_url" value="{{ station.stream_url|safe }}">
+        <input class="stack" type="text" placeholder="Image URL" name="image_url" value="{{ station.image_url|safe }}">
+        <input class="stack" type="number" placeholder="Volume" name="volume" value="{{ station.volume|safe }}" min="0" max="100">
+
+        <select class="stack" name="position">
+            {% for i in range(1,50)%}
+                <option value="{{ i }}" {{ "disabled" if i in positions }} {{ "selected" if i==station.position }}>{{ i }}</option>
+            {% endfor %}
+        </select>
+
+    <input class="stack" type="submit" value="Save">
+
+    </form>
+
+{% endblock %}
