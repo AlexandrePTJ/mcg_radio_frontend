@@ -194,3 +194,9 @@ def play_station(station_id):
     params = { "id": station_id }
     r = requests.get("%s/play" % app.config['BACKEND_URL'], params=params)
     return redirect('/')
+
+
+@app.route('/shutdown')
+def shutdown():
+    requests.get("%s/shutdown" % app.config['BACKEND_URL'])
+    return redirect('/')
