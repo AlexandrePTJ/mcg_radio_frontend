@@ -156,7 +156,7 @@ def edit_station(station_id):
         db.commit()
         return redirect('/')
 
-    cur = db.execute("SELECT * FROM stations WHERE id=?", station_id)
+    cur = db.execute("SELECT * FROM stations WHERE id=?", (station_id,))
     station = cur.fetchone()
     positions = get_positions(db)
     positions.remove(station['position'])
@@ -166,7 +166,7 @@ def edit_station(station_id):
 @app.route('/remove/<station_id>')
 def remove_station(station_id):
     db = get_db()
-    db.execute("DELETE FROM stations WHERE id=?", station_id)
+    db.execute("DELETE FROM stations WHERE id=?", (station_id,))
     db.commit()
     return redirect('/')
 
