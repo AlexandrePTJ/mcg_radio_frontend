@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, render_template, request, g, redirect
@@ -41,7 +41,7 @@ def get_next_position(db):
     """ Find hole in positions """
     cur = db.execute("SELECT MAX(position) FROM stations ORDER BY position ASC")
     r = cur.fetchone()
-    return 1 if r[0] == None else r[0] + 1
+    return 1 if r[0] is None else r[0] + 1
 
 
 def get_positions(db):
@@ -107,15 +107,15 @@ def index():
     return render_template('index.html', stations=stations)
 
 
-@app.route('/add', methods=['POST'])
-def add_station():
-    db = get_db()
-    insert_station(db,
-        request.form['name'],
-        get_next_position(db),
-        extract_stream_url(request.form['stream_url']),
-        request.form['image_url']
-    )
+@app.route('/handle_station', methods=['POST'])
+def handle_station():
+    real_stream_url = extract_stream_url(request.form['stream_url'])
+    if request.form.get('add'):
+        db = get_db()
+        insert_station(db, request.form['name'], get_next_position(db), real_stream_url, request.form['image_url'])
+    elif request.form.get('play'):
+        params = {"url": real_stream_url}
+        requests.get("%s/play" % app.config['BACKEND_URL'], params=params)
     return redirect('/')
 
 
@@ -125,12 +125,11 @@ def new_station():
 
     if request.method == 'POST':
         insert_station(db,
-            request.form['name'],
-            request.form['position'],
-            request.form['stream_url'],
-            request.form['image_url'],
-            request.form['volume']
-        )
+                       request.form['name'],
+                       request.form['position'],
+                       request.form['stream_url'],
+                       request.form['image_url'],
+                       request.form['volume'])
         return redirect('/')
 
     positions = get_positions(db)
