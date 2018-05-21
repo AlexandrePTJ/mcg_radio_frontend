@@ -191,7 +191,7 @@ def search():
 @app.route('/play/<station_id>')
 def play_station(station_id):
     params = { "id": station_id }
-    r = requests.get("%s/play" % app.config['BACKEND_URL'], params=params)
+    requests.get("%s/play" % app.config['BACKEND_URL'], params=params)
     return redirect('/')
 
 
